@@ -64,8 +64,12 @@ module Inspec::Resources
       conn.options.timeout      = @read_timeout  # open/read timeout in seconds
       conn.options.open_timeout = @open_timeout  # connection open timeout in seconds
 
-      @response = conn.send(@method.downcase) do |req|
-        req.body = @data
+      if @method.downcase != 'options'
+        @response = conn.send(@method.downcase) do |req|
+          req.body = @data
+        end
+      else
+        @response = conn.run_request(@method.downcase, nil, nil, nil)
       end
     end
   end
